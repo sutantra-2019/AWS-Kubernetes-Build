@@ -43,7 +43,7 @@ phases:
   post_build: # Push the Docker image to the ECR
     commands:
       - echo I AM IN Post-Build Stage
-      - $(aws ecr get-login --no-include-email --region us-west-2)
+      - $(aws ecr get-login --no-include-email --region us-east-1)
       - docker push 837275592753.dkr.ecr.us-east-1.amazonaws.com/pge-ecm-k8s-repo:nginx
       - docker push 837275592753.dkr.ecr.us-east-1.amazonaws.com/pge-ecm-k8s-repo:redis
       - echo Post-Build Stage Completed
