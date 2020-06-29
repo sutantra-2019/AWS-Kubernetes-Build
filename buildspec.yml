@@ -2,7 +2,6 @@ version: 0.2
 phases:
   install: # Install AWS cli, kubectl (needed for Helm) and Helm
     commands:
-       - sudo su
        - echo sudo su completed on `date`
        - sudo apt install -y awscli git python3
        - echo installation of awscli git and python completed on `date`
