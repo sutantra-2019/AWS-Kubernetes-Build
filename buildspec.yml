@@ -52,9 +52,14 @@ phases:
       - kubectl version
       - kubectl get pods -A
       - kubectl create ns tiller-controller
-      - kubectl get ns -A      
+	    - kubectl create ns Frontend
+      - kubectl create ns Backend	  
+      - kubectl get ns -A
+      - kubectl apply -f nginx-deployment.yml -n Frontend
+      - kubectl apply -f redis-deployment.yml -n Backend      
       - kubectl apply -f rbac.yaml
       - kubectl apply -f create-tiller-ns.yaml
-      - helm init --tiller-namespace tiller-controller --tiller-tls --tiller-tls-cert src/helm/certificates/tiller.cert.pem --tiller-tls-key src/helm/certificates/tiller.key.pem --tiller-tls-verify --tls-ca-cert src/helm/certificates/base-ca.cert.pem --service-account tiller --override 'spec.template.spec.containers[0].command'='{/tiller,--storage=secret}' --history-max 3 --wait
       - kubectl get pods -n tiller-controller
+	    - kubectl get deployments -A	  
+      - helm init --tiller-namespace tiller-controller --tiller-tls --tiller-tls-cert src/helm/certificates/tiller.cert.pem --tiller-tls-key src/helm/certificates/tiller.key.pem --tiller-tls-verify --tls-ca-cert src/helm/certificates/base-ca.cert.pem --service-account tiller --override 'spec.template.spec.containers[0].command'='{/tiller,--storage=secret}' --history-max 3 --wait
       - helm version --tls --tiller-namespace tiller-controller
