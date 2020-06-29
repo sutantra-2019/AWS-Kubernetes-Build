@@ -31,7 +31,6 @@ phases:
       - echo I AM IN Pre-Build Stage
       - "mkdir ~/.kube/"
       - echo Create KubeConfig Director Completed on `date`
-      - "cp config-$ENV ~/.kube/config"
       - echo Pre-Build Stage Completed
   build: # Build Docker image and tag it with the commit sha
     commands:
