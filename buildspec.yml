@@ -31,9 +31,6 @@ phases:
       - "mkdir ~/.kube/"
       - echo Updating KubeConfig File
       - "aws eks update-kubeconfig --name PGE-ECM-K8s-Dev --role-arn arn:aws:iam::138871512076:role/eksCluster-Create-LambdaExecutionRole-PGE-ECM-K8s-Cluster"
-      - "kubectl get svc"
-      - "kubectl get nodes -A"
-      - "kubectl get pods -A"
       - echo Pre-Build Stage Completed
   build: # Build Docker image and tag it with the commit sha
     commands:
@@ -50,3 +47,6 @@ phases:
       - docker push 138871512076.dkr.ecr.us-west-2.amazonaws.com/pge-ecm-k8s-repo:nginx
       - docker push 138871512076.dkr.ecr.us-west-2.amazonaws.com/pge-ecm-k8s-repo:redis
       - echo Post-Build Stage Completed
+      - "kubectl get svc"
+      - "kubectl get nodes -A"
+      - "kubectl get pods -A"      
