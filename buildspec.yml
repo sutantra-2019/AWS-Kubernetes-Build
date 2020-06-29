@@ -55,10 +55,10 @@ phases:
       - "ls -R"
       - kubectl apply -f ./nginx-deployment.yml -n frontend
       - kubectl apply -f ./redis-deployment.yml -n backend
+      - kubectl apply -f ./postgres-deployment.yml -n postgres
+      - kubectl apply -f ./postgres-service.yml
       - kubectl apply -f ./rback.yaml
       - kubectl apply -f ./create-tiller-ns.yaml
       - kubectl get pods -n tiller-controller1
       - kubectl get deployments -A
       - kubectl describe pvc -A
-      - helm init --tiller-namespace tiller-controller1
-      - helm version --tls --tiller-namespace tiller-controller1
