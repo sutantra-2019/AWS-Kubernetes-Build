@@ -3,7 +3,6 @@ phases:
   install: # Install AWS cli, kubectl (needed for Helm) and Helm
     commands:
        - apt-get update -y
-       - echo sudo su completed on `date`
        - apt install -y awscli git python3
        - echo installation of awscli git and python completed on `date`
        - curl -o aws-iam-authenticator https://amazon-eks.s3-us-west-2.amazonaws.com/1.12.7/2019-03-27/bin/linux/amd64/aws-iam-authenticator
@@ -30,20 +29,21 @@ phases:
     commands:
       - echo I AM IN Pre-Build Stage
       - "mkdir ~/.kube/"
-      - echo Create KubeConfig Director Completed on `date`
+      - echo Updating KubeConfig File
+      - "aws eks update-kubeconfig --name PGE-ECM-K8s-Dev --role-arn arn:aws:iam::138871512076:role/eksCluster-Create-LambdaExecutionRole-PGE-ECM-K8s-Cluster"
       - echo Pre-Build Stage Completed
   build: # Build Docker image and tag it with the commit sha
     commands:
       - echo I AM IN Build Stage
       - docker pull nginx:latest
       - docker pull redis:latest	  
-      - docker tag nginx:latest 837275592753.dkr.ecr.us-east-1.amazonaws.com/pge-ecm-k8s-repo:nginx
-      - docker tag redis:latest 837275592753.dkr.ecr.us-east-1.amazonaws.com/pge-ecm-k8s-repo:redis
+      - docker tag nginx:latest 138871512076.dkr.ecr.us-west-2.amazonaws.com/pge-ecm-k8s-repo:nginx
+      - docker tag redis:latest 138871512076.dkr.ecr.us-west-2.amazonaws.com/pge-ecm-k8s-repo:redis
       - echo Build Stage Completed
   post_build: # Push the Docker image to the ECR
     commands:
       - echo I AM IN Post-Build Stage
-      - $(aws ecr get-login --no-include-email --region us-east-1)
-      - docker push 837275592753.dkr.ecr.us-east-1.amazonaws.com/pge-ecm-k8s-repo:nginx
-      - docker push 837275592753.dkr.ecr.us-east-1.amazonaws.com/pge-ecm-k8s-repo:redis
+      - $(aws ecr get-login --no-include-email --region us-west-2)
+      - docker push 138871512076.dkr.ecr.us-west-2.amazonaws.com/pge-ecm-k8s-repo:nginx
+      - docker push 138871512076.dkr.ecr.us-west-2.amazonaws.com/pge-ecm-k8s-repo:redis
       - echo Post-Build Stage Completed
