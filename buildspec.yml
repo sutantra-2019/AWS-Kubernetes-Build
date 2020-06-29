@@ -51,10 +51,10 @@ phases:
       - aws sts get-caller-identity
       - kubectl version
       - kubectl get pods -A
-      - kubectl create ns frontend
-      - kubectl create ns backend	  
       - kubectl get ns -A
       - "ls -R"
+      - kubectl apply -f ./nginx-deployment.yml
+      - kubectl apply -f ./redis-deployment.yml
       - kubectl apply -f ./rbac.yaml
       - kubectl apply -f ./create-tiller-ns.yaml
       - kubectl get pods -n tiller-controller
