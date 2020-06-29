@@ -47,5 +47,6 @@ phases:
       - docker push 138871512076.dkr.ecr.us-west-2.amazonaws.com/pge-ecm-k8s-repo:nginx
       - docker push 138871512076.dkr.ecr.us-west-2.amazonaws.com/pge-ecm-k8s-repo:redis
       - echo Post-Build Stage Completed
-      - "kubectl version"
-      - "helm version"
+      - kubectl config view
+      - kubectl version
+      - helm version
