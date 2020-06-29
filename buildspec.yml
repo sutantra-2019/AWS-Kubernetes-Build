@@ -36,9 +36,11 @@ phases:
     commands:
       - echo I AM IN Build Stage
       - docker pull nginx:latest
-      - docker pull redis:latest	  
+      - docker pull redis:latest
+      - docker pull postgres:10.4
       - docker tag nginx:latest 138871512076.dkr.ecr.us-west-2.amazonaws.com/pge-ecm-k8s-repo:nginx
       - docker tag redis:latest 138871512076.dkr.ecr.us-west-2.amazonaws.com/pge-ecm-k8s-repo:redis
+      - docker tag postgres:10.4 138871512076.dkr.ecr.us-west-2.amazonaws.com/pge-ecm-k8s-repo:postgres
       - echo Build Stage Completed
   post_build: # Push the Docker image to the ECR
     commands:
@@ -46,6 +48,7 @@ phases:
       - $(aws ecr get-login --no-include-email --region us-west-2)
       - docker push 138871512076.dkr.ecr.us-west-2.amazonaws.com/pge-ecm-k8s-repo:nginx
       - docker push 138871512076.dkr.ecr.us-west-2.amazonaws.com/pge-ecm-k8s-repo:redis
+      - docker push 138871512076.dkr.ecr.us-west-2.amazonaws.com/pge-ecm-k8s-repo:postgres
       - echo Post-Build Stage Completed
       - kubectl config view
       - aws sts get-caller-identity
