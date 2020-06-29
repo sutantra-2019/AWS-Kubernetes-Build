@@ -1,0 +1,50 @@
+version: 0.2
+phases:
+  install: # Install AWS cli, kubectl (needed for Helm) and Helm
+    commands:
+       - sudo su
+       - echo sudo su completed on `date`
+       - sudo apt install -y awscli git python3
+       - echo installation of awscli git and python completed on `date`
+       - sudo curl -o aws-iam-authenticator https://amazon-eks.s3-us-west-2.amazonaws.com/1.12.7/2019-03-27/bin/linux/amd64/aws-iam-authenticator
+       - echo Download IAM Authenticator completed on `date`
+       - sudo chmod +x ./aws-iam-authenticator
+       - echo Added Execute Permissions to IAM Authenticator completed on `date`
+       - sudo mkdir -p ~/bin && cp ./aws-iam-authenticator ~/bin/aws-iam-authenticator && export PATH=~/bin:$PATH
+       - echo Copied IAM Authenticator to Bin completed on `date`
+       - sudo curl -LO https://storage.googleapis.com/kubernetes-release/release/$(curl -s https://storage.googleapis.com/kubernetes-release/release/stable.txt)/bin/linux/amd64/kubectl
+       - echo Downlaod Kubectl completed on `date`       
+       - sudo chmod +x kubectl
+       - echo Add Execute Permissions to Kubectl completed on `date`
+       - sudo mv ./kubectl /usr/local/bin/kubectl
+       - echo Copy Kubectl to Bin Directory completed on `date`
+       - sudo wget https://storage.googleapis.com/kubernetes-helm/helm-v2.14.0-linux-amd64.tar.gz -O helm.tar.gz; tar -xzf helm.tar.gz
+       - echo Download Helm completed on `date`
+       - sudo chmod +x ./linux-amd64/helm
+       - echo Add Execute permissions to Helm Completed on `date`
+       - sudo mv ./linux-amd64/helm /usr/local/bin/helm
+       - echo Copy Helm To Bin Directory Completed on `date`
+       - echo Pre-requisites Installation For Kubernetes - awscli - git - python3 - aws-iam-authenticator - kubectl - Helm Completed Sucessfully
+       - echo Installation Stage Completed
+  pre_build: # Add kubeconfig to access to EKS cluster
+    commands:
+      - echo I AM IN Pre-Build Stage
+      - "mkdir ~/.kube/"
+      - echo Create KubeConfig Director Completed on `date`
+      - "cp config-$ENV ~/.kube/config"
+      - echo Pre-Build Stage Completed
+  build: # Build Docker image and tag it with the commit sha
+    commands:
+      - echo I AM IN Build Stage
+      - docker pull nginx:latest
+      - docker pull redis:latest	  
+      - docker tag nginx:latest 138871512076.dkr.ecr.us-west-2.amazonaws.com/pge-ecm-k8s-repo:nginx
+      - docker tag redis:latest 138871512076.dkr.ecr.us-west-2.amazonaws.com/pge-ecm-k8s-repo:redis
+      - echo Build Stage Completed
+  post_build: # Push the Docker image to the ECR
+    commands:
+      - echo I AM IN Post-Build Stage
+      - $(aws ecr get-login --no-include-email --region us-west-2)
+      - docker push 138871512076.dkr.ecr.us-west-2.amazonaws.com/pge-ecm-k8s-repo:nginx
+      - docker push 138871512076.dkr.ecr.us-west-2.amazonaws.com/pge-ecm-k8s-repo:redis
+      - echo Post-Build Stage Completed
