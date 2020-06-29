@@ -1,21 +1,80 @@
-apiVersion: apps/v1
+apiVersion: v1
+kind: Service
+metadata:
+  name: data-tier
+  labels:
+    app: microservices
+spec:
+  ports:
+  - port: 6379
+    protocol: TCP # default 
+    name: redis # optional when only 1 port
+  selector:
+    tier: data 
+  type: ClusterIP # default
+---
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: data-tier-volume
+spec:
+  capacity:
+    storage: 1Gi # 1 gibibyte
+  accessModes:
+    - ReadWriteOnce
+  awsElasticBlockStore: 
+    volumeID: INSERT_VOLUME_ID # replace with actual ID
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: data-tier-volume-claim
+spec:
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 128Mi # 128 mebibytes 
+---
+apiVersion: apps/v1 # apps API group
 kind: Deployment
 metadata:
   name: redis-deployment
   labels:
-    app: redis
+    app: microservices
+    tier: data
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: redis
+      tier: data
   template:
     metadata:
       labels:
-        app: redis
-    spec:
+        app: microservices
+        tier: data
+    spec: # Pod spec
       containers:
       - name: redis
         image: 138871512076.dkr.ecr.us-west-2.amazonaws.com/pge-ecm-k8s-repo:redis
+        imagePullPolicy: IfNotPresent
         ports:
-        - containerPort: 80
+          - containerPort: 6379
+            name: redis
+        livenessProbe:
+          tcpSocket:
+            port: redis # named port
+          initialDelaySeconds: 15
+        readinessProbe:
+          exec:
+            command:
+            - redis-cli
+            - ping
+          initialDelaySeconds: 5
+        volumeMounts:
+          - mountPath: /data
+            name: data-tier-volume
+      volumes:
+      - name: data-tier-volume
+        persistentVolumeClaim:
+          claimName: data-tier-volume-claim        
