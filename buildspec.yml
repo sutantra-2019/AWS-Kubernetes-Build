@@ -69,7 +69,6 @@ phases:
       - kubectl apply -f ./redis-deployment.yml -n backend
       - kubectl apply -f ./postgres-deployment.yml -n postgres
       - kubectl apply -f ./postgres-service.yml
-      - kubectl apply -f ./rback.yaml
       - kubectl apply -f ./tiller-account.yml
       - echo ======================================================================================
       - kubectl get deployments -A
