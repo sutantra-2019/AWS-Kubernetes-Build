@@ -65,3 +65,5 @@ phases:
       - kubectl get pods -n tiller-controller1
       - kubectl get deployments -A
       - kubectl describe pvc -A
+      - helm version
+      - helm repo list
