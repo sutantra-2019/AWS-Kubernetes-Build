@@ -78,8 +78,9 @@ phases:
       - echo ======================================================================================
       - helm version     
       - helm repo add bitnami https://charts.bitnami.com/bitnami
-      - helm repo list      
-      - helm search repo bitnami
+      - echo ======================================================================================      
+      - helm repo list
       - helm search repo bitnami/nginx
+      - echo ======================================================================================      
       - helm install --set name=nginx-web dev bitnami/nginx      
       - echo ======================================================================================
