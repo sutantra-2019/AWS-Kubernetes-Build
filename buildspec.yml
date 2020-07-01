@@ -17,12 +17,12 @@ phases:
        - echo Add Execute Permissions to Kubectl completed on `date`
        - mv ./kubectl /usr/local/bin/kubectl
        - echo Copy Kubectl to Bin Directory completed on `date`
-       - wget https://storage.googleapis.com/kubernetes-helm/helm-v2.14.0-linux-amd64.tar.gz -O helm.tar.gz; tar -xzf helm.tar.gz
+       - curl https://raw.githubusercontent.com/helm/helm/master/scripts/get-helm-3 > get_helm.sh
        - echo Download Helm completed on `date`
-       - chmod +x ./linux-amd64/helm
+       - chmod 700 get_helm.sh
        - echo Add Execute permissions to Helm Completed on `date`
-       - mv ./linux-amd64/helm /usr/local/bin/helm
-       - echo Copy Helm To Bin Directory Completed on `date`
+       - ls -R
+       - /bin/bash get_helm.sh
        - echo Pre-requisites Installation For Kubernetes - awscli - git - python3 - aws-iam-authenticator - kubectl - Helm Completed Sucessfully
        - echo Installation Stage Completed
   pre_build: # Add kubeconfig to access to EKS cluster
@@ -45,25 +45,36 @@ phases:
   post_build: # Push the Docker image to the ECR
     commands:
       - echo I AM IN Post-Build Stage
+      - echo ======================================================================================
       - $(aws ecr get-login --no-include-email --region us-west-2)
+      - echo ======================================================================================
       - docker push 138871512076.dkr.ecr.us-west-2.amazonaws.com/pge-ecm-k8s-repo:nginx
       - docker push 138871512076.dkr.ecr.us-west-2.amazonaws.com/pge-ecm-k8s-repo:redis
       - docker push 138871512076.dkr.ecr.us-west-2.amazonaws.com/pge-ecm-k8s-repo:postgres
+      - echo ======================================================================================
       - echo Post-Build Stage Completed
       - kubectl config view
+      - echo ======================================================================================
       - aws sts get-caller-identity
+      - echo ======================================================================================
       - kubectl version
+      - echo ======================================================================================
       - kubectl get pods -A
+      - echo ======================================================================================
       - kubectl get ns -A
+      - echo ======================================================================================
       - "ls -R"
+      - echo ======================================================================================
       - kubectl apply -f ./nginx-deployment.yml -n frontend
       - kubectl apply -f ./redis-deployment.yml -n backend
       - kubectl apply -f ./postgres-deployment.yml -n postgres
       - kubectl apply -f ./postgres-service.yml
       - kubectl apply -f ./rback.yaml
-      - kubectl apply -f ./create-tiller-ns.yaml
-      - kubectl get pods -n tiller-controller1
+      - echo ======================================================================================
       - kubectl get deployments -A
+      - echo ======================================================================================
       - kubectl describe pvc -A
+      - echo ======================================================================================
       - helm version
       - helm repo list
+      - echo ======================================================================================
