@@ -3,24 +3,11 @@ phases:
   install: # Install AWS cli, kubectl (needed for Helm) and Helm
     commands:
        - apt-get update -y
-       - apt install -y awscli git python3
-       - echo installation of awscli git and python completed on `date`
-       - curl -o aws-iam-authenticator https://amazon-eks.s3-us-west-2.amazonaws.com/1.12.7/2019-03-27/bin/linux/amd64/aws-iam-authenticator
-       - echo Download IAM Authenticator completed on `date`
-       - chmod +x ./aws-iam-authenticator
-       - echo Added Execute Permissions to IAM Authenticator completed on `date`
-       - mkdir -p ~/bin && cp ./aws-iam-authenticator ~/bin/aws-iam-authenticator && export PATH=~/bin:$PATH
-       - echo Copied IAM Authenticator to Bin completed on `date`
-       - curl -LO https://storage.googleapis.com/kubernetes-release/release/$(curl -s https://storage.googleapis.com/kubernetes-release/release/stable.txt)/bin/linux/amd64/kubectl
-       - echo Downlaod Kubectl completed on `date`       
-       - chmod +x kubectl
-       - echo Add Execute Permissions to Kubectl completed on `date`
-       - mv ./kubectl /usr/local/bin/kubectl
-       - echo Copy Kubectl to Bin Directory completed on `date`
        - curl https://raw.githubusercontent.com/helm/helm/master/scripts/get-helm-3 > get_helm.sh
        - echo Download Helm completed on `date`
        - chmod 700 get_helm.sh
        - echo Add Execute permissions to Helm Completed on `date`
+	   - ls -R
        - sh ./get_helm.sh
        - echo Pre-requisites Installation For Kubernetes - awscli - git - python3 - aws-iam-authenticator - kubectl - Helm Completed Sucessfully
        - echo Installation Stage Completed
