@@ -4,10 +4,8 @@ phases:
     commands:
        - apt-get update -y
        - curl https://raw.githubusercontent.com/helm/helm/master/scripts/get-helm-3 > get_helm.sh
-       - echo Download Helm completed on `date`
        - chmod 700 get_helm.sh
-       - echo Add Execute permissions to Helm Completed on `date`
-	   - ls -R
+       - ls -R
        - sh ./get_helm.sh
        - echo Pre-requisites Installation For Kubernetes - awscli - git - python3 - aws-iam-authenticator - kubectl - Helm Completed Sucessfully
        - echo Installation Stage Completed
