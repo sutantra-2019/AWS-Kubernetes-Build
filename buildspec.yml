@@ -82,5 +82,5 @@ phases:
       - helm repo list
       - helm search repo bitnami/nginx
       - echo ======================================================================================      
-      - helm install --set name=nginx-web dev bitnami/nginx      
+      - helm install --set name=nginx-web devlopment bitnami/nginx      
       - echo ======================================================================================
